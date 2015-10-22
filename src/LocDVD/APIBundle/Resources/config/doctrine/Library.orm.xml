@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="LocDVD\APIBundle\Entity\Library" table="library">
+    <unique-constraints>
+      <unique-constraint name="library_ukey" columns="title"/>
+    </unique-constraints>
+    <id name="id" type="integer" column="id">
+      <generator strategy="SEQUENCE"/>
+    </id>
+    <field name="title" type="string" column="title" length="255" nullable="false"/>
+    <field name="type" type="string" column="type" nullable="false"/>
+    <field name="isPublic" type="boolean" column="is_public" nullable="false"/>
+  </entity>
+</doctrine-mapping>

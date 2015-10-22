@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="LocDVD\APIBundle\Entity\HomeVideo" table="home_video">
+    <indexes>
+      <index name="home_video_title_idx" columns="title"/>
+      <index name="IDX_773D23BCFE2541D7" columns="library_id"/>
+    </indexes>
+    <unique-constraints>
+      <unique-constraint name="home_video_ukey" columns="library_id,title,record_time_utc"/>
+      <unique-constraint name="home_video_umapper" columns="mapper_id"/>
+    </unique-constraints>
+    <id name="id" type="integer" column="id">
+      <generator strategy="SEQUENCE"/>
+    </id>
+    <field name="title" type="string" column="title" length="255" nullable="false"/>
+    <field name="sortTitle" type="string" column="sort_title" length="255" nullable="false"/>
+    <field name="recordTime" type="datetime" column="record_time" nullable="true"/>
+    <field name="createDate" type="datetime" column="create_date" nullable="true"/>
+    <field name="modifyDate" type="datetime" column="modify_date" nullable="true"/>
+    <field name="recordTimeUtc" type="datetime" column="record_time_utc" nullable="true"/>
+    <field name="certificate" type="string" column="certificate" length="255" nullable="false"/>
+    <many-to-one field="mapper" target-entity="Mapper">
+      <join-columns>
+        <join-column name="mapper_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="library" target-entity="Library">
+      <join-columns>
+        <join-column name="library_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

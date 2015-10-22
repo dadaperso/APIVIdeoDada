@@ -1,0 +1,3 @@
+loc_dvdapi_homepage:
+    path:     /hello/{name}
+    defaults: { _controller: LocDVDAPIBundle:Default:index }

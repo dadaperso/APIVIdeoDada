@@ -1,0 +1,116 @@
+<?php
+
+namespace LocDVD\APIBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Movie
+ *
+ * @ORM\Table(name="movie", uniqueConstraints={@ORM\UniqueConstraint(name="movie_ukey", columns={"library_id", "title", "year"}), @ORM\UniqueConstraint(name="movie_umapper", columns={"mapper_id"})}, indexes={@ORM\Index(name="movie_title_idx", columns={"title"}), @ORM\Index(name="IDX_1D5EF26FFE2541D7", columns={"library_id"})})
+ * @ORM\Entity
+ */
+class Movie
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="SEQUENCE")
+     * @ORM\SequenceGenerator(sequenceName="movie_id_seq", allocationSize=1, initialValue=1)
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="title", type="string", length=255, nullable=false)
+     */
+    private $title;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="sort_title", type="string", length=255, nullable=false)
+     */
+    private $sortTitle;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="tag_line", type="string", length=255, nullable=false)
+     */
+    private $tagLine;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="year", type="integer", nullable=true)
+     */
+    private $year;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="originally_available", type="date", nullable=true)
+     */
+    private $originallyAvailable;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="sort_time", type="date", nullable=true)
+     */
+    private $sortTime;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="islock", type="boolean", nullable=true)
+     */
+    private $islock;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="create_date", type="datetime", nullable=true)
+     */
+    private $createDate = 'now()';
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="modify_date", type="datetime", nullable=true)
+     */
+    private $modifyDate = 'now()';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="certificate", type="string", length=255, nullable=false)
+     */
+    private $certificate = '';
+
+    /**
+     * @var \Library
+     *
+     * @ORM\ManyToOne(targetEntity="Library")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="library_id", referencedColumnName="id")
+     * })
+     */
+    private $library;
+
+    /**
+     * @var \Mapper
+     *
+     * @ORM\ManyToOne(targetEntity="Mapper")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="mapper_id", referencedColumnName="id")
+     * })
+     */
+    private $mapper;
+
+
+}

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="LocDVD\APIBundle\Entity\CollectionHasLibrary" table="collection_has_library">
+    <indexes>
+      <index name="IDX_5ADB6CE6514956FD" columns="collection_id"/>
+      <index name="IDX_5ADB6CE6FE2541D7" columns="library_id"/>
+    </indexes>
+    <unique-constraints>
+      <unique-constraint name="has_library_ukey" columns="collection_id,library_id"/>
+    </unique-constraints>
+    <id name="id" type="integer" column="id">
+      <generator strategy="SEQUENCE"/>
+    </id>
+    <many-to-one field="library" target-entity="Library">
+      <join-columns>
+        <join-column name="library_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="collection" target-entity="Collection">
+      <join-columns>
+        <join-column name="collection_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

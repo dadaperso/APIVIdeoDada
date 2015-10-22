@@ -1,0 +1,7 @@
+loc_dvdapi:
+    resource: "@LocDVDAPIBundle/Resources/config/routing.yml"
+    prefix:   /
+
+app:
+    resource: "@AppBundle/Controller/"
+    type:     annotation
