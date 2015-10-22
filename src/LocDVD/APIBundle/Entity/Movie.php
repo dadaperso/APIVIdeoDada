@@ -111,6 +111,99 @@ class Movie
      * })
      */
     private $mapper;
+	
+	public function getId() {
+		return $this->id;
+	}
+	public function setId($id) {
+		$this->id = $id;
+		return $this;
+	}
+	public function getTitle() {
+		return $this->title;
+	}
+	public function setTitle($title) {
+		$this->title = $title;
+		return $this;
+	}
+	public function getSortTitle() {
+		return $this->sortTitle;
+	}
+	public function setSortTitle($sortTitle) {
+		$this->sortTitle = $sortTitle;
+		return $this;
+	}
+	public function getTagLine() {
+		return $this->tagLine;
+	}
+	public function setTagLine($tagLine) {
+		$this->tagLine = $tagLine;
+		return $this;
+	}
+	public function getYear() {
+		return $this->year;
+	}
+	public function setYear($year) {
+		$this->year = $year;
+		return $this;
+	}
+	public function getOriginallyAvailable() {
+		return $this->originallyAvailable;
+	}
+	public function setOriginallyAvailable(\DateTime $originallyAvailable) {
+		$this->originallyAvailable = $originallyAvailable;
+		return $this;
+	}
+	public function getSortTime() {
+		return $this->sortTime;
+	}
+	public function setSortTime(\DateTime $sortTime) {
+		$this->sortTime = $sortTime;
+		return $this;
+	}
+	public function getIslock() {
+		return $this->islock;
+	}
+	public function setIslock($islock) {
+		$this->islock = $islock;
+		return $this;
+	}
+	public function getCreateDate() {
+		return $this->createDate;
+	}
+	public function setCreateDate(\DateTime $createDate) {
+		$this->createDate = $createDate;
+		return $this;
+	}
+	public function getModifyDate() {
+		return $this->modifyDate;
+	}
+	public function setModifyDate(\DateTime $modifyDate) {
+		$this->modifyDate = $modifyDate;
+		return $this;
+	}
+	public function getCertificate() {
+		return $this->certificate;
+	}
+	public function setCertificate($certificate) {
+		$this->certificate = $certificate;
+		return $this;
+	}
+	public function getLibrary() {
+		return $this->library;
+	}
+	public function setLibrary(Library $library) {
+		$this->library = $library;
+		return $this;
+	}
+	public function getMapper() {
+		return $this->mapper;
+	}
+	public function setMapper(Mapper $mapper) {
+		$this->mapper = $mapper;
+		return $this;
+	}
+	
 
 
 }

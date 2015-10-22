@@ -19,7 +19,10 @@
 		"symfony/swiftmailer-bundle" : "~2.3",
 		"symfony/monolog-bundle" : "~2.4",
 		"sensio/distribution-bundle" : "~4.0",
-		"sensio/framework-extra-bundle" : "~3.0,>=3.0.2"
+		"sensio/framework-extra-bundle" : "~3.0,>=3.0.2",
+		"jms/serializer-bundle": "^1.0",
+		"friendsofsymfony/rest-bundle": "@stable",
+		"doctrine/doctrine-fixtures-bundle": "dev-master"
 	},
 	"require-dev" : {
 		"sensio/generator-bundle" : "~2.3"

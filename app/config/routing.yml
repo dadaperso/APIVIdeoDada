@@ -1,7 +1,14 @@
 loc_dvdapi:
-    resource: "@LocDVDAPIBundle/Resources/config/routing.yml"
+    resource: "@LocDVDAPIBundle/Controller/"
+    type:     annotation
     prefix:   /
+
+users:
+    type:   rest
+    resource:   LocDVD\APIBundle\Controller\MovieController
 
 app:
     resource: "@AppBundle/Controller/"
     type:     annotation
+    
+
