@@ -69,6 +69,8 @@ doctrine:
             video_type: string
             privilege_type: string
             oid: integer
+        types:
+            timestamp: LocDVD\APIBundle\Types\TimestampType
 
     orm:
         auto_generate_proxy_classes: "%kernel.debug%"

@@ -19,8 +19,8 @@
     <field name="originallyAvailable" type="date" column="originally_available" nullable="true"/>
     <field name="sortTime" type="date" column="sort_time" nullable="true"/>
     <field name="islock" type="boolean" column="islock" nullable="true"/>
-    <field name="createDate" type="datetime" column="create_date" nullable="true"/>
-    <field name="modifyDate" type="datetime" column="modify_date" nullable="true"/>
+    <field name="createDate" type="timestamp" column="create_date" nullable="true"/>
+    <field name="modifyDate" type="timestamp" column="modify_date" nullable="true"/>
     <field name="certificate" type="string" column="certificate" length="255" nullable="false"/>
     <many-to-one field="mapper" target-entity="Mapper">
       <join-columns>

@@ -12,8 +12,8 @@
       <generator strategy="SEQUENCE"/>
     </id>
     <field name="actor" type="string" column="actor" length="255" nullable="false"/>
-    <field name="createDate" type="datetime" column="create_date" nullable="true"/>
-    <field name="modifyDate" type="datetime" column="modify_date" nullable="true"/>
+    <field name="createDate" type="timestamp" column="create_date" nullable="true"/>
+    <field name="modifyDate" type="timestamp" column="modify_date" nullable="true"/>
     <many-to-one field="mapper" target-entity="Mapper">
       <join-columns>
         <join-column name="mapper_id" referenced-column-name="id"/>

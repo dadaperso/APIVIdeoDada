@@ -3,9 +3,13 @@ loc_dvdapi:
     type:     annotation
     prefix:   /
 
-users:
+movies:
     type:   rest
     resource:   LocDVD\APIBundle\Controller\MovieController
+
+actors:
+    type:   rest
+    resource:   LocDVD\APIBundle\Controller\ActorController
 
 app:
     resource: "@AppBundle/Controller/"
