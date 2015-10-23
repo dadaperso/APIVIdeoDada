@@ -3,6 +3,7 @@
 namespace LocDVD\APIBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 
 /**
@@ -34,14 +35,14 @@ class Actor
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="create_date", type="datetime", nullable=true)
+     * @ORM\Column(name="create_date", type="timestamp", nullable=true)
      */
     private $createDate = 'now()';
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="modify_date", type="datetime", nullable=true)
+     * @ORM\Column(name="modify_date", type="timestamp", nullable=true)
      */
     private $modifyDate = 'now()';
 
@@ -54,6 +55,73 @@ class Actor
      * })
      */
     private $mapper;
+    
+    /**
+     * 
+     * @var ArrayCollection
+     * 
+     * @ORM\OneToMany(targetEntity="Movie", mappedBy="mapper_id")
+     */
+    private $movies;
+    
+    
+    
+    public function __construct()
+    {
+    	$this->movies =new ArrayCollection();
+    }
+    
+	public function getId() {
+		return $this->id;
+	}
+	public function setId($id) {
+		$this->id = $id;
+		return $this;
+	}
+	public function getActor() {
+		return $this->actor;
+	}
+	public function setActor($actor) {
+		$this->actor = $actor;
+		return $this;
+	}
+	public function getCreateDate() {
+		return $this->createDate;
+	}
+	public function setCreateDate(\DateTime $createDate) {
+		$this->createDate = $createDate;
+		return $this;
+	}
+	public function getModifyDate() {
+		return $this->modifyDate;
+	}
+	public function setModifyDate(\DateTime $modifyDate) {
+		$this->modifyDate = $modifyDate;
+		return $this;
+	}
+	public function getMapper() {
+		return $this->mapper;
+	}
+	public function setMapper(Mapper $mapper) {
+		$this->mapper = $mapper;
+		return $this;
+	}
+	public function getMovies() {
+		return $this->movies;
+	}
+	public function setMovies(ArrayCollection $movies) {
+		$this->movies = $movies;
+		return $this;
+	}
+	
+	public function addMovie(Movie $movie)
+	{
+		$this->movies->add($movie);
+	}
+	
+    
+    
+    
 
 
 }

@@ -3,12 +3,13 @@
 namespace LocDVD\APIBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Movie
  *
  * @ORM\Table(name="movie", uniqueConstraints={@ORM\UniqueConstraint(name="movie_ukey", columns={"library_id", "title", "year"}), @ORM\UniqueConstraint(name="movie_umapper", columns={"mapper_id"})}, indexes={@ORM\Index(name="movie_title_idx", columns={"title"}), @ORM\Index(name="IDX_1D5EF26FFE2541D7", columns={"library_id"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="LocDVD\APIBundle\Entity\MovieRepository")
  */
 class Movie
 {
@@ -111,6 +112,19 @@ class Movie
      * })
      */
     private $mapper;
+    
+    /**
+     * 
+     * @var ArrayCollection
+     * 
+     * @ORM\ManyToOne(targetEntity="Actor", inversedBy="mapper_id")
+     */
+    private $actor;
+    
+    public function __construct()
+    {
+    	$this->actor = new ArrayCollection();
+    }
 	
 	public function getId() {
 		return $this->id;
@@ -203,6 +217,19 @@ class Movie
 		$this->mapper = $mapper;
 		return $this;
 	}
+	
+	public function getActors() {
+		return $this->actor;
+	}
+	
+	public function addActor(Actor $actor) {
+		$this->actor->add($actor);
+	}
+		
+	public function setActors(ArrayCollection $actors) {
+		$this->actor = $actors;
+	}
+	
 	
 
 

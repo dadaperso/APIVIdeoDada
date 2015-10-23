@@ -28,6 +28,17 @@ class Mapper
      * @ORM\Column(name="type", type="string", nullable=true)
      */
     private $type;
+    
+    
+	public function getId() {
+		return $this->id;
+	}
+	public function getType() {
+		return $this->type;
+	}
+	
+    
+    
 
 
 }
