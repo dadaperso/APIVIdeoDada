@@ -11,6 +11,10 @@ actors:
     type:   rest
     resource:   LocDVD\APIBundle\Controller\ActorController
 
+search:
+    type:   rest
+    resource:   LocDVD\APIBundle\Controller\SearchController
+
 app:
     resource: "@AppBundle/Controller/"
     type:     annotation

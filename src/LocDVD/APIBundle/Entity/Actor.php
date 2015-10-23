@@ -10,7 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * Actor
  *
  * @ORM\Table(name="actor", uniqueConstraints={@ORM\UniqueConstraint(name="actor_mapper_ukey", columns={"actor", "mapper_id"})}, indexes={@ORM\Index(name="actor_idx", columns={"actor"}), @ORM\Index(name="IDX_447556F9B9CA839A", columns={"mapper_id"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="LocDVD\APIBundle\Entity\ActorRepository")
  */
 class Actor
 {
@@ -56,16 +56,11 @@ class Actor
      */
     private $mapper;
     
-    /**
-     * 
-     * @var ArrayCollection
-     * 
-     * @ORM\OneToMany(targetEntity="Movie", mappedBy="mapper_id")
-     */
+
     private $movies;
-    
-    
-    
+
+    private $tvShows;
+
     public function __construct()
     {
     	$this->movies =new ArrayCollection();
@@ -118,6 +113,19 @@ class Actor
 	{
 		$this->movies->add($movie);
 	}
+
+    public function getTvShows() {
+        return $this->tvShows;
+    }
+    public function setTvShow($tvShow) {
+        $this->tvShows = $tvShow;
+        return $this;
+    }
+
+    public function addTvShows(Tvshow $tvShow)
+    {
+        $this->tvShows[] = $tvShow;
+    }
 	
     
     

@@ -1,0 +1,5 @@
+{{ movie.title }}
+
+{% for actor in movie.actors %}
+  {{ actor.actor }} {% if not loop.last %}, {% endif %}
+{% endfor %}

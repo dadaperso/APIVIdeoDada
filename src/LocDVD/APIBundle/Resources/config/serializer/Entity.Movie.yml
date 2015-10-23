@@ -1,0 +1,11 @@
+LocDVD\APIBundle\Entity\Movie:
+    exclusion_policy: ALL
+    properties:
+        id:
+            expose: true
+        title:
+            expose: true
+        year:
+            expose: true
+        actors:
+            expose: true

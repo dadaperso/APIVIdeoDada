@@ -8,10 +8,9 @@ class ActorRepository extends EntityRepository
 {
 	function getActorByMapper(Mapper $mapper) {
 		
-		$qb = $this->_em->createQueryBuilder();
+		$qb = $this->createQueryBuilder('a');
 		
-		$qb->select('a.actor')
-			->from('LocDVD\APIBundle\Entity\Actor', 'a')
+		$qb
 			->where($qb->expr()->eq('a.mapper', ':mapper'))
 			->setParameter('mapper', $mapper->getId())
 		;
@@ -19,7 +18,7 @@ class ActorRepository extends EntityRepository
 		
 		return $qb
 			->getQuery()
-			->getArrayResult()
+			->getResult()
 		;
 	}
 }

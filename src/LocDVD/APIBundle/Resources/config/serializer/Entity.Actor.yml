@@ -1,0 +1,5 @@
+LocDVD\APIBundle\Entity\Actor:
+    exclusion_policy: ALL
+    properties:
+        actor:
+            expose: true

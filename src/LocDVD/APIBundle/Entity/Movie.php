@@ -112,18 +112,13 @@ class Movie
      * })
      */
     private $mapper;
-    
-    /**
-     * 
-     * @var ArrayCollection
-     * 
-     * @ORM\ManyToOne(targetEntity="Actor", inversedBy="mapper_id")
-     */
-    private $actor;
+
+
+    private $actors;
     
     public function __construct()
     {
-    	$this->actor = new ArrayCollection();
+    	$this->actors = new ArrayCollection();
     }
 	
 	public function getId() {
@@ -219,15 +214,15 @@ class Movie
 	}
 	
 	public function getActors() {
-		return $this->actor;
+		return $this->actors;
 	}
 	
 	public function addActor(Actor $actor) {
-		$this->actor->add($actor);
+		$this->actors[] = $actor;
 	}
 		
-	public function setActors(ArrayCollection $actors) {
-		$this->actor = $actors;
+	public function setActors($actors) {
+		$this->actors = $actors;
 	}
 	
 	
