@@ -1,0 +1,17 @@
+LocDVD\APIBundle\Entity\TvshowEpisode:
+    exclusion_policy: ALL
+    properties:
+        tagLine:
+            expose: true
+        year:
+            expose: true
+        originallyAvailable:
+            expose: true
+        tvshow:
+            expose: true
+        season:
+            expose: true
+        episode:
+            expose: true
+
+

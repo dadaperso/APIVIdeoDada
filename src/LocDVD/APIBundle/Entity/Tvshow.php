@@ -67,14 +67,14 @@ class Tvshow
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="create_date", type="datetime", nullable=true)
+     * @ORM\Column(name="create_date", type="timestamp", nullable=true)
      */
     private $createDate = 'now()';
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="modify_date", type="datetime", nullable=true)
+     * @ORM\Column(name="modify_date", type="timestamp", nullable=true)
      */
     private $modifyDate = 'now()';
 

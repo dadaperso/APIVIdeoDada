@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * TvshowEpisode
  *
  * @ORM\Table(name="tvshow_episode", uniqueConstraints={@ORM\UniqueConstraint(name="tvshow_episode_umapper", columns={"mapper_id"}), @ORM\UniqueConstraint(name="tvshow_episode_ukey", columns={"season", "episode", "tvshow_id"})}, indexes={@ORM\Index(name="IDX_F9441196FE2541D7", columns={"library_id"}), @ORM\Index(name="IDX_F94411966CD43D7A", columns={"tvshow_id"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="LocDVD\APIBundle\Entity\TvshowEpisodeRepository")
  */
 class TvshowEpisode
 {
@@ -74,14 +74,14 @@ class TvshowEpisode
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="create_date", type="datetime", nullable=true)
+     * @ORM\Column(name="create_date", type="timestamp", nullable=true)
      */
     private $createDate = 'now()';
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="modify_date", type="datetime", nullable=true)
+     * @ORM\Column(name="modify_date", type="timestamp", nullable=true)
      */
     private $modifyDate = 'now()';
 

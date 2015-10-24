@@ -1,13 +1,9 @@
-LocDVD\APIBundle\Entity\Movie:
+LocDVD\APIBundle\Entity\Tvshow:
     exclusion_policy: ALL
     properties:
-        id:
-            expose: true
         title:
             expose: true
         year:
-            expose: true
-        actors:
             expose: true
         originallyAvailable:
             expose: true

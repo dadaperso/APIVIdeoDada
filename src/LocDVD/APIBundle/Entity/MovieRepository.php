@@ -2,60 +2,223 @@
 
 namespace LocDVD\APIBundle\Entity;
 
-use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\QueryBuilder;
+use Symfony\Component\HttpKernel\Log\LoggerInterface;
 
 
 class MovieRepository extends EntityRepository
 {
 
-    public function getQueryHDMovies(QueryBuilder $qb)
+    /** @var  LoggerInterface $logger */
+    private $logger;
+
+    public function setLogger(LoggerInterface $logger)
     {
-        $qb->select('mov')
+        $this->logger = $logger;
+    }
+
+    public function getStandardMovie($order = 'create', $sens = 'DESC')
+    {
+        $qb = $this->queryStandardMovie();
+
+        $this->queryOrderField($qb, $order, $sens);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    private function queryStandardMovie()
+    {
+        $qb = $this->_em->createQueryBuilder();
+
+        $qb
+            ->from('LocDVDAPIBundle:VideoFile', 'v')
+            ->where($qb->expr()->lt('v.resolutionx', ':resolx'))
+            ->setParameter('resolx', 1200);
+
+        $qb->innerJoin('LocDVDAPIBundle:Movie', 'mov', 'WITH', 'v.mapper = mov.mapper')
+            ->select('mov');
+
+        return $qb;
+    }
+
+    private function queryOrderField(QueryBuilder $qb, $field, $sens = 'ASC')
+    {
+        $this->logger->debug('VALUE field: ' . $field);
+        switch ($field) {
+            case 'duration':
+                $fieldName = 'v.duration';
+                break;
+            case 'title':
+                $fieldName = 'mov.title';
+                break;
+            case 'create':
+                $fieldName = 'v.createDate';
+                break;
+            default:
+                $fieldName = null;
+        }
+
+        $this->logger->debug('VALUE fieldName: ' . $fieldName);
+        if (!is_null($fieldName))
+            $qb->orderBy($fieldName, $sens);
+
+        return $qb;
+    }
+
+    public function getStandardMovieNotViewed($order = 'title', $sens = 'ASC')
+    {
+        $qb = $this->queryStandardMovie();
+
+        $this->queryNotViewed();
+
+        $this->queryOrderField($qb, $order, $sens);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    private function queryNotViewed()
+    {
+        $in = $this->_em->createQueryBuilder();
+        $in->select('identity(w.mapper)')
+            ->from('LocDVDAPIBundle:WatchStatus', 'w')
+            ->where('w.position >= vid.duration')
+            ->leftJoin('LocDVDAPIBundle:VideoFile', 'vid', 'WITH', 'vid.mapper = w.mapper');
+
+        return $in;
+    }
+
+    public function getStandardMovieNotViewedByDuration($start, $end, $order, $sens)
+    {
+        $qb = $this->queryStandardMovie();
+
+        $this->queryNotViewed();
+
+        $this->queryDuration($qb, $start, $end);
+
+        $this->queryOrderField($qb, $order, $sens);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    private function queryDuration(QueryBuilder $qb, \DateTime $start, \DateTime $end)
+    {
+        $qb->andWhere($qb->expr()->between('v.duration', ':start', ':end'))
+            ->setParameter('start', $start->getTimestamp())
+            ->setParameter('end', $end->getTimestamp());
+
+        return $qb;
+    }
+
+    public function getHDMovie($channel, $codec, $order = 'create', $sens = 'DESC')
+    {
+        $qb = $this->queryHDMovies();
+
+        $this->queryAudio($qb, $channel, $codec);
+
+        $this->queryOrderField($qb, $order, $sens);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    private function queryHDMovies()
+    {
+        $qb = $this->_em->createQueryBuilder();
+
+        $qb
             ->from('LocDVDAPIBundle:VideoFile', 'v')
             ->where($qb->expr()->gt('v.resolutionx', ':resolx'))
-                ->setParameter('resolx',1200)
+            ->setParameter('resolx', 1200)
             ->orWhere($qb->expr()->like('v.path', ':hd'))
-                ->setParameter('hd', '%720p%')
+            ->setParameter('hd', '%720p%')
             ->orWhere($qb->expr()->like('v.path', ':fullhd'))
-                ->setParameter('fullhd', '%1080p%')
-            ->orderBy('mov.title', 'ASC')
+            ->setParameter('fullhd', '%1080p%')
         ;
 
-        $qb->leftJoin('v.mapper', 'map', 'WITH', $qb->expr()->eq('map.type',':type'))
-            ->setParameter('type', 'movie')
-        ;
-
-        $qb->leftJoin('LocDVDAPIBundle:Movie', 'mov', 'WITH', 'v.mapper = mov.mapper')
+        $qb->innerJoin('LocDVDAPIBundle:Movie', 'mov', 'WITH', 'v.mapper = mov.mapper')
             ->select('mov')
         ;
 
         return $qb;
     }
 
-    public function getHDMovieNotViewed()
+    private function queryAudio(QueryBuilder $qb, $channel, $codec)
     {
-        /** @var \Doctrine\ORM\QueryBuilder $qb */
-        $qb = $this->_em->createQueryBuilder();
+        if ($codec) {
+            $qb->andWhere($qb->expr()->eq('v.audioCodec', ':codec'))
+                ->setParameter('codec', $codec);
+        }
 
-        $this->getQueryHDMovies($qb);
+        if ($channel) {
+            $qb->andWhere($qb->expr()->eq('v.channel', ':channel'))
+                ->setParameter('channel', $channel);
+        }
+
+        return $qb;
+    }
+
+    public function getHDMovieNotViewed($channel, $codec, $order = 'create', $sens = 'DESC')
+    {
+        $qb = $this->queryHDMovies();
 
         $qb->andWhere($qb->expr()->notIn('mov.mapper', $this->queryNotViewed()->getDQL()));
+
+        $this->queryAudio($qb, $channel, $codec);
+
+        $this->logger->debug('VALUE field in HDNotView : ' . $order);
+        $this->queryOrderField($qb, $order, $sens);
 
         return $qb->getQuery()->getResult();
     }
 
-    public function queryNotViewed()
+    public function getHDMovieByDuration($channel, $codec, $start, $end)
     {
-        $in = $this->_em->createQueryBuilder();
-        $in->select('identity(w.mapper)')
-            ->from('LocDVDAPIBundle:WatchStatus','w')
-            ->where('w.position >= vid.duration')
-            ->leftJoin('LocDVDAPIBundle:VideoFile', 'vid', 'WITH', 'vid.mapper = w.mapper')
+        $qb = $this->queryHDMovies();
 
+        $this->queryDuration($qb, $start, $end);
+
+        $this->queryAudio($qb, $channel, $codec);
+
+        $this->queryOrderField($qb, 'duration', 'DESC');
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function getHDMovieNotViewedByDuration($channel, $codec, $start, $end, $order, $sens)
+    {
+        $qb = $this->queryHDMovies();
+
+        $this->queryNotViewed();
+
+        $this->queryDuration($qb, $start, $end);
+
+        $this->queryAudio($qb, $channel, $codec);
+
+        $this->queryOrderField($qb, $order, $sens);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function getMoviesByActor($actorName)
+    {
+        $qb = $this->createQueryBuilder('mov');
+
+        $this->queryActorName($qb, $actorName);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    private function queryActorName(QueryBuilder $qb, $actorName)
+    {
+        $qb->innerJoin('LocDVDAPIBundle:Actor', 'act', 'WITH', $qb->expr()->andX(
+            $qb->expr()->eq('mov.mapper', 'act.mapper'),
+            $qb->expr()->eq('act.actor', ':name')
+        )
+        )
+            ->setParameter('name', $actorName)
         ;
 
-        return $in;
+        return $qb;
     }
 
 }
