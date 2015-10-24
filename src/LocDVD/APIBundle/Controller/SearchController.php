@@ -13,6 +13,7 @@ use Doctrine\ORM\EntityManager;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\View;
 use LocDVD\APIBundle\Entity\MovieRepository;
+use LocDVD\APIBundle\Entity\TvshowEpisodeRepository;
 use Monolog\Logger;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -142,6 +143,34 @@ class SearchController  extends Controller{
         return array(
             'count' => count($videos),
             'videos' => $videos
+        );
+    }
+
+    /**
+     * @Get("/search/keyword")
+     * @param Request $request
+     * @return array
+     */
+    public function getSearchByKeywordAction(Request $request)
+    {
+        $keyword = $request->get('keyword');
+
+        /** @var EntityManager $em */
+        $em = $this->getDoctrine()->getManager();
+
+        /** @var MovieRepository $movieRepo */
+        $movieRepo = $em->getRepository('LocDVDAPIBundle:Movie');
+        $movies = $movieRepo->getMovieByKeyword($keyword);
+
+        /** @var TvshowEpisodeRepository $tvZodRepo */
+        $tvZodRepo = $em->getRepository('LocDVDAPIBundle:TvshowEpisode');
+        $tvZods = $tvZodRepo->getTvZodByKeyword($keyword);
+
+        $videos = array_merge($movies, $tvZods);
+
+        return array(
+            'count' => count($videos),
+            'videos' => $videos,
         );
     }
 }

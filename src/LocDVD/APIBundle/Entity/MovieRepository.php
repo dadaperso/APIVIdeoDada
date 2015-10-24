@@ -132,12 +132,10 @@ class MovieRepository extends EntityRepository
             ->orWhere($qb->expr()->like('v.path', ':hd'))
             ->setParameter('hd', '%720p%')
             ->orWhere($qb->expr()->like('v.path', ':fullhd'))
-            ->setParameter('fullhd', '%1080p%')
-        ;
+            ->setParameter('fullhd', '%1080p%');
 
         $qb->innerJoin('LocDVDAPIBundle:Movie', 'mov', 'WITH', 'v.mapper = mov.mapper')
-            ->select('mov')
-        ;
+            ->select('mov');
 
         return $qb;
     }
@@ -155,20 +153,6 @@ class MovieRepository extends EntityRepository
         }
 
         return $qb;
-    }
-
-    public function getHDMovieNotViewed($channel, $codec, $order = 'create', $sens = 'DESC')
-    {
-        $qb = $this->queryHDMovies();
-
-        $qb->andWhere($qb->expr()->notIn('mov.mapper', $this->queryNotViewed()->getDQL()));
-
-        $this->queryAudio($qb, $channel, $codec);
-
-        $this->logger->debug('VALUE field in HDNotView : ' . $order);
-        $this->queryOrderField($qb, $order, $sens);
-
-        return $qb->getQuery()->getResult();
     }
 
     public function getHDMovieByDuration($channel, $codec, $start, $end)
@@ -215,10 +199,54 @@ class MovieRepository extends EntityRepository
             $qb->expr()->eq('act.actor', ':name')
         )
         )
-            ->setParameter('name', $actorName)
-        ;
+            ->setParameter('name', $actorName);
 
         return $qb;
+    }
+
+    public function getMovieByKeyword($keyword)
+    {
+        /** @var QueryBuilder $qb */
+        $qb = $this->createQueryBuilder('mov');
+
+        $this->queryKeyWord($qb, $keyword);
+
+        return $qb->getQuery()->getResult();
+
+    }
+
+    private function queryKeyWord(QueryBuilder $qb, $keyword)
+    {
+        // Actor filter
+        $qb->innerJoin('LocDVDAPIBundle:Actor', 'act', 'WITH', $qb->expr()->eq('mov.mapper', 'act.mapper'));
+
+        // Summary filter
+        $qb->innerJoin('LocDVDAPIBundle:Summary', 'summary', 'WITH', $qb->expr()->eq('mov.mapper', 'summary.mapper'));
+
+        // Title filter
+        $qb->andWhere($qb->expr()->orX(
+            $qb->expr()->like('mov.title', ':keyword'),
+            $qb->expr()->like('summary.summary', ':keyword'),
+            $qb->expr()->like('act.actor', ':keyword')
+        )
+        )->setParameter('keyword', '%' . $keyword . '%');
+
+        return $qb;
+
+    }
+
+    public function getHDMovieNotViewed($channel, $codec, $order = 'create', $sens = 'DESC')
+    {
+        $qb = $this->queryHDMovies();
+
+        $qb->andWhere($qb->expr()->notIn('mov.mapper', $this->queryNotViewed()->getDQL()));
+
+        $this->queryAudio($qb, $channel, $codec);
+
+        $this->logger->debug('VALUE field in HDNotView : ' . $order);
+        $this->queryOrderField($qb, $order, $sens);
+
+        return $qb->getQuery()->getResult();
     }
 
 }

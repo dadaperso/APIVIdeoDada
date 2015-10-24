@@ -36,4 +36,42 @@ class TvshowEpisodeRepository extends EntityRepository
             ->innerJoin('tvZod.mapper', 'map');
     }
 
+    public function getTvZodByKeyword($keyword)
+    {
+        $qb = $this->createQueryBuilder('tvZod');
+
+        $this->queryKeyword($qb, $keyword);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    private function queryKeyword(QueryBuilder $qb, $keyword)
+    {
+        // Actor filter
+        $qb->innerJoin('LocDVDAPIBundle:Actor', 'act', 'WITH',
+            $qb->expr()->eq('act.mapper', 'tvZod.mapper')
+        );
+
+        // Summary filter
+        $qb->innerJoin('LocDVDAPIBundle:Summary', 'summary', 'WITH',
+            $qb->expr()->eq('tvZod.mapper', 'summary.mapper')
+        );
+
+        // Title Tvshow filter
+        $qb->innerJoin('tvZod.tvshow', 'tv');
+
+        // Title TvZod filter
+        $qb->andWhere($qb->expr()->orX(
+            $qb->expr()->like('tvZod.tagLine', ':keyword'),
+            $qb->expr()->like('summary.summary', ':keyword'),
+            $qb->expr()->like('tv.title', ':keyword'),
+            $qb->expr()->like('act.actor', ':keyword')
+        )
+        );
+
+        $qb->setParameter('keyword', '%' . $keyword . '%');
+
+        return $qb;
+    }
+
 }
