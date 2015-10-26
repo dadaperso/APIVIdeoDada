@@ -12,13 +12,13 @@ namespace LocDVD\APIBundle\Controller;
 use Doctrine\ORM\EntityManager;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\View;
+use FOS\RestBundle\Controller\FOSRestController;
 use LocDVD\APIBundle\Entity\MovieRepository;
 use LocDVD\APIBundle\Entity\TvshowEpisodeRepository;
 use Monolog\Logger;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
-class SearchController  extends Controller{
+class SearchController  extends FOSRestController{
 
     /**
      *
@@ -99,6 +99,7 @@ class SearchController  extends Controller{
      * @Get("/search/movies/actor")
      * @param Request $request
      * @return array
+     * @View()
      */
     public function getSearchMovieActorAction(Request $request)
     {
@@ -122,6 +123,7 @@ class SearchController  extends Controller{
      * @Get("/search/actor")
      * @param Request $request
      * @return array
+     * @View()
      */
     public function getSearchActorAction(Request $request)
     {
@@ -150,6 +152,7 @@ class SearchController  extends Controller{
      * @Get("/search/keyword")
      * @param Request $request
      * @return array
+     * @View()
      */
     public function getSearchByKeywordAction(Request $request)
     {

@@ -3,12 +3,12 @@
 namespace LocDVD\APIBundle\Controller;
 
 use Doctrine\ORM\EntityManager;
-use LocDVD\APIBundle\Entity\ActorRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use LocDVD\APIBundle\Entity\Movie;
 use FOS\RestBundle\Controller\Annotations\View;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use LocDVD\APIBundle\Entity\ActorRepository;
+use LocDVD\APIBundle\Entity\Movie;
 use LocDVD\APIBundle\Entity\MovieRepository;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 
 class MovieController  extends Controller
@@ -33,7 +33,7 @@ class MovieController  extends Controller
 	/**
 	 * @param Movie $movie
 	 * @return array
-	 * @view()
+	 * @View()
 	 * @ParamConverter("movie", class="LocDVDAPIBundle:Movie")
 	 */
 	function getMovieAction(Movie $movie)
@@ -50,4 +50,6 @@ class MovieController  extends Controller
 
         return array("movie" => $movie);
 	}
+
+
 }

@@ -249,4 +249,20 @@ class MovieRepository extends EntityRepository
         return $qb->getQuery()->getResult();
     }
 
+    public function getMoviesByLastUpdate(\DateTime $lastUpdate)
+    {
+        /** @var QueryBuilder $qb */
+        $qb = $this->createQueryBuilder('mov');
+
+        $qb->where($qb->expr()->orX(
+            $qb->expr()->gte('mov.createDate',':lastUpdate'),
+            $qb->expr()->gte('mov.modifyDate',':lastUpdate')
+        ))
+            ->setParameter('lastUpdate', $lastUpdate);
+
+        return $qb->getQuery()->getResult();
+     }
+
+
+
 }

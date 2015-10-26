@@ -1,9 +1,17 @@
 LocDVD\APIBundle\Entity\Tvshow:
     exclusion_policy: ALL
     properties:
+        mapper:
+            expose: true
+        id:
+            expose: true
         title:
             expose: true
         year:
             expose: true
         originallyAvailable:
+            expose: true
+        createDate:
+            expose: true
+        modifyDate:
             expose: true

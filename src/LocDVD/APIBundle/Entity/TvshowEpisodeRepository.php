@@ -74,4 +74,21 @@ class TvshowEpisodeRepository extends EntityRepository
         return $qb;
     }
 
+    public function getTvZodByLastUpdate(\DateTime $lastUpdate)
+    {
+        /** @var QueryBuilder $qb */
+        $qb = $this->createQueryBuilder('tvZod');
+
+        $qb->where($qb->expr()->orX(
+            $qb->expr()->gte('tvZod.createDate',':lastUpdate'),
+            $qb->expr()->gte('tvZod.modifyDate',':lastUpdate')
+        ))
+            ->setParameter('lastUpdate', $lastUpdate);
+
+
+        return $qb->getQuery()->getArrayResult();
+
+
+    }
+
 }

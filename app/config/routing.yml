@@ -3,6 +3,10 @@ loc_dvdapi:
     type:     annotation
     prefix:   /
 
+truc:
+    type:   rest
+    resource :  LocDVD\APIBundle\Controller\UpdateController
+
 movies:
     type:   rest
     resource:   LocDVD\APIBundle\Controller\MovieController

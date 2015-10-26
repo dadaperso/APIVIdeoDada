@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Tvshow
  *
  * @ORM\Table(name="tvshow", uniqueConstraints={@ORM\UniqueConstraint(name="tvshow_umapper", columns={"mapper_id"}), @ORM\UniqueConstraint(name="tvshow_ukey", columns={"library_id", "title", "year"})}, indexes={@ORM\Index(name="tvshow_title_idx", columns={"title"}), @ORM\Index(name="IDX_44A9FD06FE2541D7", columns={"library_id"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="LocDVD\APIBundle\Entity\TvshowRepository")
  */
 class Tvshow
 {

@@ -3,3 +3,9 @@ LocDVD\APIBundle\Entity\Actor:
     properties:
         actor:
             expose: true
+        mapper:
+            expose: true
+        createDate:
+            expose: true
+        modifyDate:
+            expose: true

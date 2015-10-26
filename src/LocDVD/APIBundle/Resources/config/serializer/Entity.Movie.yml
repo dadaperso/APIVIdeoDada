@@ -3,11 +3,21 @@ LocDVD\APIBundle\Entity\Movie:
     properties:
         id:
             expose: true
+        mapper:
+            expose: true
         title:
+            expose: true
+        sortTitle:
+            expose: true
+        tagLine:
             expose: true
         year:
             expose: true
         actors:
             expose: true
         originallyAvailable:
+            expose: true
+        createDate:
+            expose: true
+        modifyDate:
             expose: true
