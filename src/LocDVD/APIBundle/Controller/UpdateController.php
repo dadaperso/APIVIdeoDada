@@ -31,7 +31,21 @@ class UpdateController extends FOSRestController
     public function getUpdateCheckAction(Request $request)
     {
         $lastUpdate = $request->get('lastUpdate', '1860-01-01 00:00:01.000001');
-        $lastUpdate = new \DateTime($lastUpdate);
+        $lastdate = explode(' ', $lastUpdate);
+        $lastdate = explode('-', $lastdate[0]);
+        $days = explode('T',$lastdate[2]);
+
+
+        $lastUpdate = new \DateTime();
+        $lastUpdate->setDate($lastdate[0],$lastdate[1], $days[0]);
+
+        if(isset($days[1])){
+            $time = explode(":", $days[1]);
+            $lastUpdate->setTime($time[0],$time[1]);
+        }
+        $logger = $this->get('logger');
+
+        $logger->addDebug($lastUpdate->format('Y-m-d'));
 
         $entities = $request->get('entities', array('movie', 'tvZod', 'tvshow', 'actor'));
 
@@ -71,14 +85,21 @@ class UpdateController extends FOSRestController
             $actors = array();
         }
 
+        if(in_array('summary', $entities)){
+            $summaryRepo = $em->getRepository('LocDVDAPIBundle:Summary');
+            $summarys  =$summaryRepo->getSummaryByLastUpdate($lastUpdate);
+        }else{
+            $summarys = array();
+        }
+
         return array(
-            'count' => count($movies) + count($tvZods)+ count($actors)+ count($tvshows),
+            'count' => count($movies) + count($tvZods)+ count($actors)+ count($tvshows)+ count($summarys),
             'update' => array(
-                'movie' => $movies,
-                'tv'    => $tvshows,
-                'tvZod' => $tvZods,
-                'actor' => $actors
-                
+                'movie'   => $movies,
+                'tvshow'  => $tvshows,
+                'tvZod'   => $tvZods,
+                'actor'   => $actors,
+                'summary' => $summarys,
             ),
         );
     }

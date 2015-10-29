@@ -1,6 +1,12 @@
 LocDVD\APIBundle\Entity\TvshowEpisode:
     exclusion_policy: ALL
     properties:
+        id:
+            expose: true
+        tvShow:
+            expose: true
+        mapper:
+            expose: true
         tagLine:
             expose: true
         year:
@@ -12,6 +18,8 @@ LocDVD\APIBundle\Entity\TvshowEpisode:
         season:
             expose: true
         episode:
+            expose: true
+        originallyAvailable:
             expose: true
         createDate:
             expose: true

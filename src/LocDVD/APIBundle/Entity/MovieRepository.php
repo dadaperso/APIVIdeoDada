@@ -260,6 +260,10 @@ class MovieRepository extends EntityRepository
         ))
             ->setParameter('lastUpdate', $lastUpdate);
 
+        $qb->orderBy('mov.createDate', 'ASC')
+            ->addOrderBy('mov.modifyDate', 'ASC')
+        ;
+
         return $qb->getQuery()->getResult();
      }
 

@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Summary
  *
  * @ORM\Table(name="summary", uniqueConstraints={@ORM\UniqueConstraint(name="summary_umapper", columns={"mapper_id"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="LocDVD\APIBundle\Entity\SummaryRepository")
  */
 class Summary
 {
@@ -32,14 +32,14 @@ class Summary
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="create_date", type="datetime", nullable=true)
+     * @ORM\Column(name="create_date", type="timestamp", nullable=true)
      */
     private $createDate = 'now()';
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="modify_date", type="datetime", nullable=true)
+     * @ORM\Column(name="modify_date", type="timestamp", nullable=true)
      */
     private $modifyDate = 'now()';
 

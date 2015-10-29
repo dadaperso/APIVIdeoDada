@@ -86,7 +86,7 @@ class TvshowEpisodeRepository extends EntityRepository
             ->setParameter('lastUpdate', $lastUpdate);
 
 
-        return $qb->getQuery()->getArrayResult();
+        return $qb->getQuery()->getResult();
 
 
     }
