@@ -34,7 +34,11 @@ class ActorRepository extends EntityRepository
         ))
             ->setParameter('lastUpdate', $lastUpdate);
 
+        $qb->orderBy('a.createDate', 'ASC')
+            ->addOrderBy('a.modifyDate', 'ASC')
+        ;
 
-        return $qb->getQuery()->getArrayResult();
+
+        return $qb->getQuery()->getResult();
     }
 }
