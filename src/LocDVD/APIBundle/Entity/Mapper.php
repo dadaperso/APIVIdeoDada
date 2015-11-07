@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Mapper
  *
  * @ORM\Table(name="mapper")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="LocDVD\APIBundle\Entity\MapperRepository")
  */
 class Mapper
 {
