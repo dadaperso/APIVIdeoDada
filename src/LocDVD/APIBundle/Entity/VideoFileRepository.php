@@ -15,4 +15,21 @@ class VideoFileRepository extends EntityRepository
 {
 
 
+    public function getVideoFileByLastUpdate($lastUpdate)
+    {
+        /** @var QueryBuilder $qb */
+        $qb = $this->createQueryBuilder('vf');
+
+        $qb->where($qb->expr()->orX(
+            $qb->expr()->gte('vf.createDate',':lastUpdate'),
+            $qb->expr()->gte('vf.modifyDate',':lastUpdate')
+        ))
+            ->setParameter('lastUpdate', $lastUpdate);
+
+        $qb->orderBy('vf.createDate', 'ASC')
+            ->addOrderBy('vf.modifyDate', 'ASC')
+        ;
+
+        return $qb->getQuery()->getResult();
+    }
 }

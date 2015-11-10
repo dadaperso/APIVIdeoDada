@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * VideoFile
  *
  * @ORM\Table(name="video_file", uniqueConstraints={@ORM\UniqueConstraint(name="video_file_ukey", columns={"path"})}, indexes={@ORM\Index(name="video_file_create_date_idx", columns={"create_date"}), @ORM\Index(name="IDX_8B086BCCB9CA839A", columns={"mapper_id"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="LocDVD\APIBundle\Entity\VideoFileRepository")
  */
 class VideoFile
 {

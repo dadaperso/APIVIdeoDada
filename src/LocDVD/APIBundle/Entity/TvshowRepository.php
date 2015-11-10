@@ -26,6 +26,10 @@ class TvshowRepository extends EntityRepository
         ))
         ->setParameter('lastUpdate', $lastUpdate);
 
+        $qb->orderBy('tv.createDate', 'ASC')
+            ->addOrderBy('tv.modifyDate', 'ASC')
+        ;
+
 
         return $qb->getQuery()->getResult();
     }

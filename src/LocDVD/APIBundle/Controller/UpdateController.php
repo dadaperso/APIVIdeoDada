@@ -17,6 +17,7 @@ use LocDVD\APIBundle\Entity\MapperRepository;
 use LocDVD\APIBundle\Entity\MovieRepository;
 use LocDVD\APIBundle\Entity\TvshowEpisodeRepository;
 use LocDVD\APIBundle\Entity\TvshowRepository;
+use LocDVD\APIBundle\Entity\VideoFileRepository;
 use Symfony\Component\HttpFoundation\Request;
 
 class UpdateController extends FOSRestController
@@ -108,15 +109,26 @@ class UpdateController extends FOSRestController
             $mappers = array();
         }
 
+        if(in_array('video_file', $entities)){
+            /** @var VideoFileRepository $videoFileRepo */
+            $videoFileRepo = $em->getRepository('LocDVDAPIBundle:VideoFile');
+            $videoFiles = $videoFileRepo->getVideoFileByLastUpdate($lastUpdate);
+
+        }else{
+            $videoFiles = array();
+        }
+
         return array(
-            'count' => count($movies) + count($tvZods)+ count($actors)+ count($tvshows)+ count($summarys)+ count($mappers),
+            'count' => count($movies) + count($tvZods)+ count($actors)+ count($tvshows)+ count($summarys)+ count($mappers)
+                        + count($videoFiles),
             'update' => array(
-                'movie'   => $movies,
-                'tvshow'  => $tvshows,
-                'tvZod'   => $tvZods,
-                'actor'   => $actors,
-                'summary' => $summarys,
-                'mapper'  => $mappers,
+                'movie'         => $movies,
+                'tvshow'        => $tvshows,
+                'tvZod'         => $tvZods,
+                'actor'         => $actors,
+                'summary'       => $summarys,
+                'mapper'        => $mappers,
+                'video_file'    => $videoFiles
             ),
         );
     }
