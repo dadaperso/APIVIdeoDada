@@ -9,9 +9,7 @@
 namespace LocDVD\APIBundle\Entity;
 
 
-use Doctrine\ORM\EntityRepository;
-
-class MapperRepository extends EntityRepository{
+class MapperRepository extends BaseRepository{
 
     public function getMapperByLastId($lastUpdate)
     {

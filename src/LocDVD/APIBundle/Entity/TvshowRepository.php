@@ -34,4 +34,14 @@ class TvshowRepository extends EntityRepository
         return $qb->getQuery()->getResult();
     }
 
+    public function getCountAll()
+    {
+        $qb = $this->_em->createQueryBuilder();
+
+        $qb->select("COUNT(tv.id)")
+            ->from("LocDVDAPIBundle:Tvshow", 'tv');
+
+        return $qb->getQuery()->getSingleScalarResult();
+    }
+
 }

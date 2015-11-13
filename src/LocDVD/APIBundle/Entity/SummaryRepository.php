@@ -9,9 +9,7 @@
 namespace LocDVD\APIBundle\Entity;
 
 
-use Doctrine\ORM\EntityRepository;
-
-class SummaryRepository  extends EntityRepository{
+class SummaryRepository  extends BaseRepository{
 
     public function getSummaryByLastUpdate($lastUpdate)
     {

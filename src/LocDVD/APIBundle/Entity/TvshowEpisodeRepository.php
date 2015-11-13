@@ -9,10 +9,9 @@
 namespace LocDVD\APIBundle\Entity;
 
 
-use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 
-class TvshowEpisodeRepository extends EntityRepository
+class TvshowEpisodeRepository extends BaseRepository
 {
 
     public function getTvZodByActor($actorName)
@@ -87,8 +86,16 @@ class TvshowEpisodeRepository extends EntityRepository
 
 
         return $qb->getQuery()->getResult();
+    }
 
+    public function getCountAll()
+    {
+        $qb = $this->_em->createQueryBuilder();
 
+        $qb->select("COUNT(zod.id)")
+            ->from("LocDVDAPIBundle:TvshowEpisode", 'zod');
+
+        return $qb->getQuery()->getSingleScalarResult();
     }
 
 }

@@ -2,12 +2,11 @@
 
 namespace LocDVD\APIBundle\Entity;
 
-use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\HttpKernel\Log\LoggerInterface;
 
 
-class MovieRepository extends EntityRepository
+class MovieRepository extends BaseRepository
 {
 
     /** @var  LoggerInterface $logger */
@@ -267,6 +266,44 @@ class MovieRepository extends EntityRepository
         return $qb->getQuery()->getResult();
      }
 
+    public function getCountAll()
+    {
+        $qb = $this->_em->createQueryBuilder();
+
+        $qb->select("COUNT(m.id)")
+            ->from("LocDVDAPIBundle:Movie", 'm');
+
+        return $qb->getQuery()->getSingleScalarResult();
+    }
+
+    public function getMissingMovies(array $IDs)
+    {
+        $qb = $this->createQueryBuilder('m');
+
+        $qb->where($qb->expr()->notIn('m.id',':ids'))
+            ->setParameter('ids', $IDs);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function getAllId()
+    {
+        $qb = $this->_em->createQueryBuilder();
+
+        $qb->select('m.id')
+            ->from('LocDVDAPIBundle:Movie', 'm')
+            ->orderBy('m.id', 'ASC')
+        ;
+
+        $result = $qb->getQuery()->getScalarResult();
+        $lisIds = array();
+
+        foreach($result as $row){
+            $lisIds[]=$row['id'];
+        }
+
+        return $lisIds;
+    }
 
 
 }

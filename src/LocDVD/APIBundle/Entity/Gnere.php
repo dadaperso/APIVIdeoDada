@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Gnere
  *
  * @ORM\Table(name="gnere", uniqueConstraints={@ORM\UniqueConstraint(name="gnere_mapper_ukey", columns={"gnere", "mapper_id"})}, indexes={@ORM\Index(name="gnere_idx", columns={"gnere"}), @ORM\Index(name="IDX_58045B18B9CA839A", columns={"mapper_id"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="LocDVD\APIBundle\Entity\GnereRepository")
  */
 class Gnere
 {
@@ -32,14 +32,14 @@ class Gnere
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="create_date", type="datetime", nullable=true)
+     * @ORM\Column(name="create_date", type="timestamp", nullable=true)
      */
     private $createDate = 'now()';
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="modify_date", type="datetime", nullable=true)
+     * @ORM\Column(name="modify_date", type="timestamp", nullable=true)
      */
     private $modifyDate = 'now()';
 

@@ -2,10 +2,9 @@
 
 namespace LocDVD\APIBundle\Entity;
 
-use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 
-class ActorRepository extends EntityRepository 
+class ActorRepository extends BaseRepository
 {
 	function getActorByMapper(Mapper $mapper) {
 		

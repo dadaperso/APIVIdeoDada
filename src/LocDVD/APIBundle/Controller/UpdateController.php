@@ -9,15 +9,12 @@
 namespace LocDVD\APIBundle\Controller;
 
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use FOS\RestBundle\Controller\Annotations\Get;
+use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Controller\Annotations\View;
 use FOS\RestBundle\Controller\FOSRestController;
-use LocDVD\APIBundle\Entity\ActorRepository;
-use LocDVD\APIBundle\Entity\MapperRepository;
-use LocDVD\APIBundle\Entity\MovieRepository;
-use LocDVD\APIBundle\Entity\TvshowEpisodeRepository;
-use LocDVD\APIBundle\Entity\TvshowRepository;
-use LocDVD\APIBundle\Entity\VideoFileRepository;
+use LocDVD\APIBundle\Entity\BaseRepository;
 use Symfony\Component\HttpFoundation\Request;
 
 class UpdateController extends FOSRestController
@@ -33,6 +30,8 @@ class UpdateController extends FOSRestController
     public function getUpdateCheckAction(Request $request)
     {
         $entities = $request->get('entities', array('movie', 'tvZod', 'tvshow', 'actor'));
+        $em = $this->getDoctrine()->getManager();
+        $result = array();
 
         if(!in_array('mapper', $entities)){
             $lastUpdate = $request->get('lastUpdate', '1860-01-01 00:00:01.000001');
@@ -51,86 +50,119 @@ class UpdateController extends FOSRestController
             $logger = $this->get('logger');
 
             $logger->addDebug($lastUpdate->format('Y-m-d'));
+
+            foreach($entities as $entity){
+                $nbAllEntities=0;
+                $listEntity=array();
+
+                $entityPath = $this->getEntityPathByTag($entity);
+                $metaClass = new ClassMetadata($entityPath);
+                /** @var BaseRepository $baseRepo */
+                $baseRepo = new BaseRepository($em, $metaClass);
+                $listEntity = $baseRepo->getEntitiesByLastUpdate($entityPath,$lastUpdate);
+                $nbAllEntities = $baseRepo->getCountAll();
+
+                $result[$entity]= array(
+                    "nbTotal"   => $nbAllEntities,
+                    "nbUpDate"  => count($listEntity),
+                    "data"      => $listEntity,
+                );
+            }
         }else{
             $lastUpdate = $request->get('lastUpdate',0);
+
+            /** MapperRepository $maperRepo */
+            $maperRepo = $this->getDoctrine()->getRepository('LocDVDAPIBundle:Mapper');
+            $mapper = $maperRepo->getMapperByLastId($lastUpdate);
+            $nbAllEntities = $maperRepo->getAllId();
+
+            $result['mapper']= array(
+                "nbTotal"   => $nbAllEntities,
+                "nbUpDate"  => count($mapper),
+                "data"      => $mapper,
+            );
+
         }
 
+        return $result;
+    }
 
+    /**
+     * @Post("update/maj")
+     * @param Request $request
+     * @View()
+     */
+    public function putUpdateMaJAction(Request $request)
+    {
+        $entities = $request->get('entities');
 
+        $IDs = $request->get('ids');
+
+        $logger = $this->get('logger');
+
+        $logger->addDebug('param IDs: '.print_r($IDs,true));
 
         /** @var EntityManager $em */
         $em = $this->getDoctrine()->getManager();
-        
-        if(in_array('movie', $entities)){
-            /** @var MovieRepository $movieRepo */
-            $movieRepo = $em->getRepository('LocDVDAPIBundle:Movie');
-            $movies = $movieRepo->getMoviesByLastUpdate($lastUpdate);
-        }else{
-            $movies = array();
+
+        $result = array();
+
+        foreach($entities as $entity){
+            $listMissingEntities = array();
+            $listAllEntitiesIds = array();
+            $listDeleteEntities = array();
+
+            $entityPath = $this->getEntityPathByTag($entity);
+            $metaClass = new ClassMetadata($entityPath);
+            /** @var BaseRepository $baseRepo */
+            $baseRepo = new BaseRepository($em, $metaClass);
+
+            $listMissingEntities = $baseRepo->getMissingEntities($IDs);
+            $listAllEntitiesIds = $baseRepo->getAllId();
+            $listDeleteEntities = array_diff($IDs, $listAllEntitiesIds);
+
+            $result[$entity] = array(
+                'nbMissing' => count($listMissingEntities),
+                'nbDelete'  => count($listDeleteEntities),
+                'data' =>array(
+                    'missing'   => $listMissingEntities,
+                    'delete'    => array_values($listDeleteEntities),
+                ),
+            );
         }
 
+        return $result;
+    }
 
-        if(in_array('tvZod', $entities)){
-            /** @var TvshowEpisodeRepository $tvZods */
-            $tvZodRepo = $em->getRepository('LocDVDAPIBundle:TvshowEpisode');
-            $tvZods = $tvZodRepo->getTvZodByLastUpdate($lastUpdate);
-        }else{
-            $tvZods = array();
+    private function getEntityPathByTag($tag){
+        switch($tag){
+            case 'movie':
+                $entityPath = 'LocDVDAPIBundle:Movie';
+                break;
+            case 'tvshow':
+                $entityPath = 'LocDVDAPIBundle:Tvshow';
+                break;
+            case 'tvZod':
+                $entityPath = 'LocDVDAPIBundle:TvshowEpisode';
+                break;
+            case 'mapper':
+                $entityPath = 'LocDVDAPIBundle:Mapper';
+                break;
+            case 'actor':
+                $entityPath = 'LocDVDAPIBundle:Actor';
+                break;
+            case 'summary':
+                $entityPath = 'LocDVDAPIBundle:Summary';
+                break;
+            case 'video_file':
+                $entityPath = 'LocDVDAPIBundle:VideoFile';
+                break;
+            case 'gnere':
+                $entityPath = 'LocDVDAPIBundle:Gnere';
+                break;
         }
 
-        if(in_array('tvshow',$entities)){
-            /** @var TvshowRepository $tvRepo */
-            $tvRepo = $em->getRepository('LocDVDAPIBundle:Tvshow');
-            $tvshows = $tvRepo->getTvShowByLastUpdate($lastUpdate);
-        }else{
-            $tvshows = array();
-        }
-
-        if(in_array('actor', $entities)){
-            /** @var ActorRepository $actorRepo */
-            $actorRepo = $em->getRepository('LocDVDAPIBundle:Actor');
-            $actors = $actorRepo->getActorByLastUpdate($lastUpdate);
-        }else{
-            $actors = array();
-        }
-
-        if(in_array('summary', $entities)){
-            $summaryRepo = $em->getRepository('LocDVDAPIBundle:Summary');
-            $summarys  =$summaryRepo->getSummaryByLastUpdate($lastUpdate);
-        }else{
-            $summarys = array();
-        }
-
-        if(in_array('mapper', $entities)){
-            /** @var MapperRepository $mapperRepo */
-            $mapperRepo = $em->getRepository('LocDVDAPIBundle:Mapper');
-            $mappers = $mapperRepo->getMapperByLastId($lastUpdate);
-        }else{
-            $mappers = array();
-        }
-
-        if(in_array('video_file', $entities)){
-            /** @var VideoFileRepository $videoFileRepo */
-            $videoFileRepo = $em->getRepository('LocDVDAPIBundle:VideoFile');
-            $videoFiles = $videoFileRepo->getVideoFileByLastUpdate($lastUpdate);
-
-        }else{
-            $videoFiles = array();
-        }
-
-        return array(
-            'count' => count($movies) + count($tvZods)+ count($actors)+ count($tvshows)+ count($summarys)+ count($mappers)
-                        + count($videoFiles),
-            'update' => array(
-                'movie'         => $movies,
-                'tvshow'        => $tvshows,
-                'tvZod'         => $tvZods,
-                'actor'         => $actors,
-                'summary'       => $summarys,
-                'mapper'        => $mappers,
-                'video_file'    => $videoFiles
-            ),
-        );
+        return $entityPath;
     }
 
 }

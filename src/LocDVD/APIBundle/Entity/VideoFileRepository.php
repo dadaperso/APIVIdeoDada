@@ -9,9 +9,7 @@
 namespace LocDVD\APIBundle\Entity;
 
 
-use Doctrine\ORM\EntityRepository;
-
-class VideoFileRepository extends EntityRepository
+class VideoFileRepository extends BaseRepository
 {
 
 
