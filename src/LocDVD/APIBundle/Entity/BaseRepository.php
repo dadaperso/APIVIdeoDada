@@ -58,8 +58,8 @@ class BaseRepository extends EntityRepository
     {
         $qb = $this->createQueryBuilder('e');
 
-        $qb->select('m.id')
-           ->orderBy('m.id', 'ASC')
+        $qb->select('e.id')
+           ->orderBy('e.id', 'ASC')
         ;
 
         $result = $qb->getQuery()->getScalarResult();
