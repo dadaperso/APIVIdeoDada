@@ -69,7 +69,7 @@ class MovieRepository extends BaseRepository
     {
         $qb = $this->queryStandardMovie();
 
-        $this->queryNotViewed();
+        $qb->andWhere($qb->expr()->notIn('mov.mapper', $this->queryNotViewed()->getDQL()));
 
         $this->queryOrderField($qb, $order, $sens);
 
@@ -91,7 +91,7 @@ class MovieRepository extends BaseRepository
     {
         $qb = $this->queryStandardMovie();
 
-        $this->queryNotViewed();
+        $qb->andWhere($qb->expr()->notIn('mov.mapper', $this->queryNotViewed()->getDQL()));
 
         $this->queryDuration($qb, $start, $end);
 
@@ -171,7 +171,7 @@ class MovieRepository extends BaseRepository
     {
         $qb = $this->queryHDMovies();
 
-        $this->queryNotViewed();
+        $qb->andWhere($qb->expr()->notIn('mov.mapper', $this->queryNotViewed()->getDQL()));
 
         $this->queryDuration($qb, $start, $end);
 

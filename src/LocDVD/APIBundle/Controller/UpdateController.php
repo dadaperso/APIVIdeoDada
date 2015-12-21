@@ -160,6 +160,9 @@ class UpdateController extends FOSRestController
             case 'gnere':
                 $entityPath = 'LocDVDAPIBundle:Gnere';
                 break;
+            case 'watch_status':
+                $entityPath = 'LocDVDAPIBundle:WatchStatus';
+                break;
         }
 
         return $entityPath;

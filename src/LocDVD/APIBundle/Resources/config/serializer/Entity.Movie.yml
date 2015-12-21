@@ -21,3 +21,5 @@ LocDVD\APIBundle\Entity\Movie:
             expose: true
         modifyDate:
             expose: true
+        certificate:
+            expose: true

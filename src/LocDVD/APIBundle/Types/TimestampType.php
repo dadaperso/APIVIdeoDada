@@ -2,16 +2,17 @@
 
 namespace LocDVD\APIBundle\Types;
 
-use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\ConversionException;
+use Doctrine\DBAL\Types\Type;
 
 class TimestampType extends Type
 {
 	
 	const FORMAT_STRING = 'Y-m-d H:i:s.u';
-	
-	/**
+    const FORMAT_STRING_2 = 'Y-m-d H:i:s';
+
+    /**
 	 * {@inheritdoc}
 	 */
 	public function getName()
@@ -38,7 +39,10 @@ class TimestampType extends Type
 	
 		$val = \DateTime::createFromFormat(self::FORMAT_STRING, $value);
 		if ( ! $val) {
-			throw ConversionException::conversionFailedFormat($value, $this->getName(), self::FORMAT_STRING);
+            $val = \DateTime::createFromFormat(self::FORMAT_STRING_2, $value);
+
+            if(!$val)
+			    throw ConversionException::conversionFailedFormat($value, $this->getName(), self::FORMAT_STRING);
 		}
 	
 		return $val;

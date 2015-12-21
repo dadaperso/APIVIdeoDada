@@ -25,5 +25,7 @@ LocDVD\APIBundle\Entity\TvshowEpisode:
             expose: true
         modifyDate:
             expose: true
+        certificate:
+            expose: true
 
 
