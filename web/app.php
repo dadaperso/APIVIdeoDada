@@ -1,6 +1,8 @@
 <?php
 
-use Symfony\Component\ClassLoader\ApcClassLoader;
+// fix timeout Serialize actor data
+ini_set('max_execution_time', 120);
+
 use Symfony\Component\HttpFoundation\Request;
 
 $loader = require_once __DIR__.'/../app/bootstrap.php.cache';

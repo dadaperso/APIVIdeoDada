@@ -28,6 +28,7 @@ class SearchController  extends FOSRestController{
      */
     public function getSearchMoviesAction(Request $request)
     {
+
         /** @var EntityManager $em */
         $em = $this->getDoctrine()->getManager();
 

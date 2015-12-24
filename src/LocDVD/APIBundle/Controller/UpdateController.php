@@ -33,7 +33,7 @@ class UpdateController extends FOSRestController
         $em = $this->getDoctrine()->getManager();
         $result = array();
 
-        if(!in_array('mapper', $entities)){
+        if(!in_array('mapper', $entities) && !in_array('poster', $entities)){
             $lastUpdate = $request->get('lastUpdate', '1860-01-01 00:00:01.000001');
             $lastdate = explode(' ', $lastUpdate);
             $lastdate = explode('-', $lastdate[0]);
@@ -68,18 +68,44 @@ class UpdateController extends FOSRestController
                     "data"      => $listEntity,
                 );
             }
-        }else{
+        }elseif(in_array('mapper', $entities)){
             $lastUpdate = $request->get('lastUpdate',0);
 
             /** MapperRepository $maperRepo */
             $maperRepo = $this->getDoctrine()->getRepository('LocDVDAPIBundle:Mapper');
             $mapper = $maperRepo->getMapperByLastId($lastUpdate);
-            $nbAllEntities = $maperRepo->getAllId();
+            $nbAllEntities = $maperRepo->getCountAll();
 
             $result['mapper']= array(
                 "nbTotal"   => $nbAllEntities,
                 "nbUpDate"  => count($mapper),
                 "data"      => $mapper,
+            );
+
+        }elseif(in_array('poster', $entities)){
+            $lastUpdate = $request->get('lastUpdate', '1860-01-01 00:00:01.000001');
+            $lastdate = explode(' ', $lastUpdate);
+            $lastdate = explode('-', $lastdate[0]);
+            $days = explode('T',$lastdate[2]);
+
+
+            $lastUpdate = new \DateTime();
+            $lastUpdate->setDate($lastdate[0],$lastdate[1], $days[0]);
+
+            if(isset($days[1])){
+                $time = explode(":", $days[1]);
+                $lastUpdate->setTime($time[0],$time[1]);
+            }
+
+            /** MapperRepository $maperRepo */
+            $posterRepo = $this->getDoctrine()->getRepository('LocDVDAPIBundle:Poster');
+            $poster = $posterRepo->getPosterByLastId($lastUpdate);
+            $nbAllEntities = $posterRepo->getCountAll();
+
+            $result['poster']= array(
+                "nbTotal"   => $nbAllEntities,
+                "nbUpDate"  => count($poster),
+                "data"      => $poster,
             );
 
         }
@@ -163,6 +189,8 @@ class UpdateController extends FOSRestController
             case 'watch_status':
                 $entityPath = 'LocDVDAPIBundle:WatchStatus';
                 break;
+            case 'poster':
+                $entityPath = 'LocDVDAPIBundle:Poster';
         }
 
         return $entityPath;
