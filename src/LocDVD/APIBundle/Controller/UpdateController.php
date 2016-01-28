@@ -191,6 +191,9 @@ class UpdateController extends FOSRestController
                 break;
             case 'poster':
                 $entityPath = 'LocDVDAPIBundle:Poster';
+                break;
+            default:
+                throw new \InvalidArgumentException('La table "'.$tag.'" n\'existe pas');
         }
 
         return $entityPath;
